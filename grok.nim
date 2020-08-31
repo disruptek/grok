@@ -1,3 +1,5 @@
+import std/macros
+
 template crash*(msg = "crash") =
   writeStackTrace()
   debugEcho msg
