@@ -1,3 +1,4 @@
+import std/strutils
 import std/macros
 
 template crash*(msg = "crash") =
