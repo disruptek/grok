@@ -14,7 +14,7 @@ when defined(nimdoc):
 macro ex*(x: untyped): untyped =
   result = x
   when defined(nimdoc):
-    for node in x.last:
+    for node in x[^1]:
       if node.kind == nnkCall:
         if node[0].kind == nnkIdent:
           if $node[0] == "runnableExamples":
