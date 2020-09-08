@@ -41,7 +41,7 @@ proc shortDuration*(d: Duration): string =
     n = d.inNanoseconds
   var
     t = {
-      "s": (n div 1_000_000_000) mod 1_000,
+      " s": (n div 1_000_000_000) mod 1_000,
       "ms": (n div 1_000_000) mod 1_000,
       "μs": (n div 1_000) mod 1_000,
       "ns": (n div 1) mod 1_000,
