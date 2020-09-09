@@ -49,7 +49,7 @@ proc shortDuration*(d: Duration): string =
   for i, n in pairs(t):
     if n[1] > 0:
       return "$1.$2$3" % [ $n[1], $(t[i+1][1] div 100), n[0] ]
-  raise
+  result = "n/a"
 
 proc ft*(d: Duration): string {.raises: [].} =
   ## cast a duration to a nice string
