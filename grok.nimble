@@ -1,5 +1,4 @@
-version = "0.1.0"
+version = "0.2.0"
 author = "disruptek"
 description = "don't read too much into it"
 license = "MIT"
-requires "nim >= 1.0.0"
