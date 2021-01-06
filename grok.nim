@@ -9,6 +9,10 @@ template crash*(msg = "crash") =
   debugEcho msg
   quit 1
 
+macro enumValuesAsSet*(e: typed) =
+  ## given an enum type, render a set of its values
+  newNimNode(nnkCurly).add(e.getType[1][1..^1])
+
 # just a hack to output the example numbers during docgen...
 when defined(nimdoc):
   var
