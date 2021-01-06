@@ -1,4 +1,3 @@
-import std/strutils
 import std/macros
 
 import grok/mem
@@ -17,6 +16,9 @@ macro enumValuesAsSet*(e: typed) =
 when defined(nimdoc):
   var
     exampleCounter {.compileTime.}: int
+
+when defined(nimdoc):
+  import std/strutils
 
 macro ex*(x: untyped): untyped =
   result = x
