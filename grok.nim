@@ -31,3 +31,12 @@ macro ex*(x: untyped): untyped =
             let id = repr(x[0])
             hint "fig. $1 for $2:" % [ $exampleCounter, $id ]
             hint indent(repr(node[1]), 4)
+
+proc errorAst*(s: string): NimNode =
+  ## produce {.error: s.} in order to embed errors in the ast
+  nnkPragma.newTree:
+    ident"error".newColonExpr: newLit s
+
+proc errorAst*(n: NimNode; s = "creepy ast"): NimNode =
+  ## embed an error with a message
+  errorAst s & ":\n" & treeRepr(n) & "\n"
