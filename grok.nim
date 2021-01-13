@@ -8,9 +8,15 @@ template crash*(msg = "crash") =
   debugEcho msg
   quit 1
 
-macro enumValuesAsSet*(e: typed) =
+macro enumValuesAsArray*(e: typed): untyped =
+  ## given an enum type, render an array of its values
+  nnkBracket.newNimNode.add:
+    e.getType[1][1..^1]
+
+macro enumValuesAsSet*(e: typed): untyped =
   ## given an enum type, render a set of its values
-  newNimNode(nnkCurly).add(e.getType[1][1..^1])
+  nnkCurly.newNimNode.add:
+    e.getType[1][1..^1]
 
 # just a hack to output the example numbers during docgen...
 when defined(nimdoc):
@@ -40,3 +46,16 @@ proc errorAst*(s: string): NimNode =
 proc errorAst*(n: NimNode; s = "creepy ast"): NimNode =
   ## embed an error with a message
   errorAst s & ":\n" & treeRepr(n) & "\n"
+
+when isMainModule:
+  type
+    TestEnum = enum
+      One   = (1, "1st")
+      Two   = (2, "2nd")
+      Three = (3, "3rd")
+
+  when enumValuesAsArray(TestEnum) != [One, Two, Three]:
+    error "enumValuesAsArray is broken"
+
+  when enumValuesAsSet(TestEnum) != {One, Two, Three}:
+    error "enumValuesAsSet is broken"
