@@ -17,7 +17,7 @@ type
 
 const
   k = 1024
-  size = len("1024" & $KuteUnit.high)
+  size = len("1023.9" & $KuteUnit.high)
 
 proc `<`(a, b: Kute): bool {.borrow.}
 proc `==`(a, b: Kute): bool {.borrow.}
@@ -42,9 +42,26 @@ converter `$`*(b: Kute): string =
       else:
         # else, gimme the decimal remainder
         let r = k ^ i
-        result.add $(b div r)
-        result.add '.'
-        result.add $((b mod r) div 100)
+        let bdr = b div r
+        result.add $bdr
+        var rem = b mod r
+        # only provide a remainder if it exists and bdr is 1-2 digits
+        if rem != 0 and bdr < 100:
+          result.add '.'
+          # smaller bdr values yield more remainder digits
+          result.add $(rem * (if bdr > 9: 100 else: 1000) div r)
       result.add system.`$`(KuteUnit i)
       break
   assert result.len <= size  # make sure we don't alloc somehow
+
+when isMainModule:
+  import balls
+
+  suite "kute":
+    check "sanity":
+      $Kute(812) == "812b"
+      $Kute(8192) == "8kb"
+      $Kute(8900) == "8.691kb"
+      $Kute(10*8500) == "83.0kb"
+      $Kute(100*8500) == "830kb"
+      $Kute(1000*8500) == "8.106mb"

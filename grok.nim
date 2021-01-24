@@ -47,6 +47,8 @@ proc errorAst*(n: NimNode; s = "creepy ast"): NimNode =
   ## embed an error with a message
   errorAst s & ":\n" & treeRepr(n) & "\n"
 
+proc accQuoted(s: string): NimNode = nnkAccQuoted.newTree: ident s
+
 when isMainModule:
   type
     TestEnum = enum
