@@ -1,5 +1,8 @@
 import std/macros
 
+when (NimMajor, NimMinor) < (1, 2):
+  {.error: "purely requires nim-1.2+".}
+
 type
   NodeFilter = proc(n: NimNode): NimNode
 
