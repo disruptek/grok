@@ -9,14 +9,21 @@ template crash*(msg = "crash") =
   quit 1
 
 macro enumValuesAsArray*(e: typed): untyped =
-  ## given an enum type, render an array of its values
-  nnkBracket.newNimNode.add:
+  ## given an enum type, render an array of its symbol fields
+  nnkBracket.newNimNode(e).add:
     e.getType[1][1..^1]
 
 macro enumValuesAsSet*(e: typed): untyped =
-  ## given an enum type, render a set of its values
-  nnkCurly.newNimNode.add:
+  ## given an enum type, render a set of its symbol fields
+  nnkCurly.newNimNode(e).add:
     e.getType[1][1..^1]
+
+macro enumValuesAsSetOfOrds*(e: typed): untyped =
+  ## given an enum type, render a set of its integer values
+  result = nnkCurly.newNimNode(e)
+  for n in 1 ..< e.getType[1].len:
+    result.add:
+      newLit e.getType[1][n].intVal
 
 # just a hack to output the example numbers during docgen...
 when defined(nimdoc):
