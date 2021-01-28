@@ -25,6 +25,20 @@ macro enumValuesAsSetOfOrds*(e: typed): untyped =
     result.add:
       newLit e.getType[1][n].intVal
 
+macro newTreeFrom*(kind: NimNodeKind; n: NimNode; body: untyped): NimNode =
+  ## use the kind and `n` node to create a new tree;
+  ## add the statements in the body and return this node
+  var tree = genSym(nskVar, "tree")
+  result = newStmtList:
+    newVarStmt tree:                           # var tree =
+      bindSym"newNimNode".newCall(kind, n)     # newNimNode(kind, n)
+  for child in body.items:                     # for child in body:
+    add result:
+      bindSym"add".newCall tree:               #   add tree:
+        child                                  #     child statement
+  add result:                                  # tree
+    tree
+
 # just a hack to output the example numbers during docgen...
 when defined(nimdoc):
   var
