@@ -70,6 +70,9 @@ proc errorAst*(n: NimNode; s = "creepy ast"): NimNode =
 
 proc accQuoted(s: string): NimNode = nnkAccQuoted.newTree: ident s
 
+template isNotNil*(x: untyped): bool = not(isNil(x))
+
+
 when isMainModule:
   type
     TestEnum = enum
