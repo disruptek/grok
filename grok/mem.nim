@@ -1,8 +1,10 @@
 proc quiesceMemory*(message: string): int {.inline.} =
-  GC_fullCollect()
-  when defined(debug):
-    stdmsg().writeLine GC_getStatistics()
-  result = getOccupiedMem()
+  when not defined(nimscript):
+    when not defined(js):
+      GC_fullCollect()
+    when defined(debug):
+      stdmsg().writeLine GC_getStatistics()
+    result = getOccupiedMem()
 
 template dumpMem*() =
   when defined(debug):
