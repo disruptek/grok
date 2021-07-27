@@ -1,7 +1,8 @@
 proc quiesceMemory*(message: string): int {.inline.} =
   when not defined(nimscript):
     when not defined(js):
-      GC_fullCollect()
+      when not defined(gcArc) and not defined(gcOrc):
+        GC_fullCollect()
     when defined(debugMemory):
       stdmsg().writeLine GC_getStatistics()
     result = getOccupiedMem()
