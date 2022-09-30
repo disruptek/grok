@@ -58,10 +58,22 @@ when isMainModule:
   import balls
 
   suite "kute":
-    check "sanity":
-      $Kute(812) == "812b"
-      $Kute(8192) == "8kb"
-      $Kute(8900) == "8.691kb"
-      $Kute(10*8500) == "83.0kb"
-      $Kute(100*8500) == "830kb"
-      $Kute(1000*8500) == "8.106mb"
+    block:
+      ## string rendering
+      check "unexpected string rendering":
+        $Kute(812) == "812b"
+        $Kute(8192) == "8kb"
+        $Kute(8900) == "8.691kb"
+        $Kute(10*8500) == "83.0kb"
+        $Kute(100*8500) == "830kb"
+        $Kute(1000*8500) == "8.106mb"
+
+    block:
+      ## string conversion
+      check "unexpected string conversion":
+        Kute(812) == "812b"
+        Kute(8192) == "8kb"
+        Kute(8900) == "8.691kb"
+        Kute(10*8500) == "83.0kb"
+        Kute(100*8500) == "830kb"
+        Kute(1000*8500) == "8.106mb"
