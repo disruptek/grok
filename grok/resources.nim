@@ -39,15 +39,30 @@ else:
       const message = $typeof(ru) & " is not initialized"
       raise ValueError.newException message
 
+  proc maxResidentBytes*(ru: var Resources): int {.inline.} =
+    ## retrieve the maximum resident set size in bytes
+    withSampled ru:
+      Rusage(ru).ru_maxrss.int * 1024
+
   proc maxResidentBytes*(ru: Resources): int {.inline.} =
     ## retrieve the maximum resident set size in bytes
     withSampled ru:
       Rusage(ru).ru_maxrss.int * 1024
 
+  proc voluntaryContextSwitches*(ru: var Resources): int {.inline.} =
+    ## retrieve the number of voluntary context switches
+    withSampled ru:
+      Rusage(ru).ru_nvcsw.int
+
   proc voluntaryContextSwitches*(ru: Resources): int {.inline.} =
     ## retrieve the number of voluntary context switches
     withSampled ru:
       Rusage(ru).ru_nvcsw.int
+
+  proc involuntaryContextSwitches*(ru: var Resources): int {.inline.} =
+    ## retrieve the number of involuntary context switches
+    withSampled ru:
+      Rusage(ru).ru_nivcsw.int
 
   proc involuntaryContextSwitches*(ru: Resources): int {.inline.} =
     ## retrieve the number of involuntary context switches
