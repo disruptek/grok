@@ -1,4 +1,5 @@
 import std/math
+import std/strformat
 
 import grok
 
@@ -43,13 +44,10 @@ converter `$`*(b: Kute): string =
         # else, gimme the decimal remainder
         let r = k ^ i
         let bdr = b div r
-        result.add $bdr
-        var rem = b mod r
-        # only provide a remainder if it exists and bdr is 1-2 digits
-        if rem != 0 and bdr < 100:
-          result.add '.'
-          # smaller bdr values yield more remainder digits
-          result.add $(rem * (if bdr > 9: 100 else: 1000) div r)
+        if b mod r > 0 and bdr < 10:
+          result.add fmt"{math.round(b.float / r.float, 1):>01}"
+        else:
+          result.add $bdr
       result.add system.`$`(KuteUnit i)
       break
   assert result.len <= size  # make sure we don't alloc somehow
@@ -63,17 +61,18 @@ when isMainModule:
       check "unexpected string rendering":
         $Kute(812) == "812b"
         $Kute(8192) == "8kb"
-        $Kute(8900) == "8.691kb"
-        $Kute(10*8500) == "83.0kb"
+        $Kute(8900) == "8.7kb"
+        $Kute(10*8500) == "83kb"
         $Kute(100*8500) == "830kb"
-        $Kute(1000*8500) == "8.106mb"
+        $Kute(1000*8500) == "8.1mb"
 
     block:
       ## string conversion
       check "unexpected string conversion":
         Kute(812) == "812b"
         Kute(8192) == "8kb"
-        Kute(8900) == "8.691kb"
-        Kute(10*8500) == "83.0kb"
+        Kute(8900) == "8.7kb"
+        Kute(10*8500) == "83kb"
         Kute(100*8500) == "830kb"
-        Kute(1000*8500) == "8.106mb"
+        Kute(1000*8500) == "8.1mb"
+        Kute(10000*8500) == "81mb"
