@@ -1,4 +1,5 @@
 import std/macros
+import std/strutils
 
 import grok/mem
 export mem
@@ -72,6 +73,19 @@ proc accQuoted(s: string): NimNode = nnkAccQuoted.newTree: ident s
 
 template isNotNil*(x: untyped): bool = not(isNil(x))
 
+macro `//`*(args: varargs[untyped]): untyped =
+  ## emit the arguments as a c comment
+  var s = @["/*"]
+  for item in args.items:
+    s.add:
+      if item.kind == nnkStrLit:
+        item.strVal
+      else:
+        repr item
+  s.add "*/"
+  nnkPragma.newTree:
+    nnkExprColonExpr.newTree:
+      [ident"emit", nnkBracket.newTree s.join(" ").newLit]
 
 when isMainModule:
   type
